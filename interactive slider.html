@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picswanday: The Art of Color Grading</title>
+    <style>
+        /* Responsive Imagery and Typography */
+        body { font-family: system-ui, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; color: #333; }
+        img, video { max-width: 100%; height: auto; border-radius: 8px; }
+        
+        /* Purposeful Animation: Fade-in on load */
+        .fade-in { animation: fadeIn 1.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Interactive Component: Before & After Slider */
+        .slider-container { position: relative; width: 100%; max-width: 800px; aspect-ratio: 16/9; overflow: hidden; border-radius: 8px; margin: 2rem 0; }
+        .img-background, .img-foreground { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .img-foreground { width: 50%; border-right: 3px solid #fff; }
+        
+        /* Accessibility: Invisible range slider for keyboard control */
+        .slider-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; z-index: 10; }
+        .slider-input:focus { outline: 3px solid #005fcc; opacity: 0.2; } /* Visible focus */
+    </style>
+</head>
+<body class="fade-in">
+
+    <h1>Elevating Visuals: The Picswanday Grading Workflow</h1>
+    <p>Professional video production requires shooting in flat color profiles, such as Nikon N-Log, to preserve maximum dynamic range. The true aesthetic is built during the post-production color grading process.</p>
+
+    <!-- Audio/Video Component -->
+    <h2>Final Deliverable</h2>
+    <video controls preload="metadata" aria-label="Showcase of final color-graded event footage">
+        <!-- Add your optimized video file here -->
+        <source src="picswanday-showcase.mp4" type="video/mp4">
+        <track kind="captions" src="captions.vtt" srclang="en" label="English">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Meaningful Interactive Component -->
+    <h2>Compare: Raw N-Log vs. Final Grade</h2>
+    <p>Use the slider below to drag and compare the unedited raw footage with the final cinematic grade.</p>
+    
+    <div class="slider-container">
+        <!-- Final Graded Image (Background) -->
+        <img src="graded-frame.jpg" alt="Final color graded frame showing vibrant colors and contrast" class="img-background">
+        
+        <!-- Raw N-Log Image (Foreground) -->
+        <img src="raw-nlog-frame.jpg" alt="Raw unedited Nikon N-Log frame showing flat colors" class="img-foreground" id="foreground-img">
+        
+        <!-- Keyboard accessible control -->
+        <input type="range" min="0" max="100" value="50" class="slider-input" id="slider" aria-label="Percentage of raw image to display">
+    </div>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const foreground = document.getElementById('foreground-img');
+        
+        slider.addEventListener('input', (e) => {
+            foreground.style.width = `${e.target.value}%`;
+        });
+    </script>
+</body>
+</html>
