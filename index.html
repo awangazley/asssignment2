@@ -6,58 +6,151 @@
     <title>Picswanday: The Art of Color Grading</title>
     <style>
         /* Responsive Imagery and Typography */
-        body { font-family: system-ui, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; color: #333; }
-        img, video { max-width: 100%; height: auto; border-radius: 8px; }
+        body { 
+            font-family: system-ui, sans-serif; 
+            line-height: 1.6; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            color: #222; 
+            background-color: #fafafa;
+        }
+        
+        video { 
+            width: 100%; 
+            height: auto; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
         
         /* Purposeful Animation: Fade-in on load */
-        .fade-in { animation: fadeIn 1.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 1.2s ease-out; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
         
         /* Interactive Component: Before & After Slider */
-        .slider-container { position: relative; width: 100%; max-width: 800px; aspect-ratio: 16/9; overflow: hidden; border-radius: 8px; margin: 2rem 0; }
-        .img-background, .img-foreground { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-        .img-foreground { width: 50%; border-right: 3px solid #fff; }
+        .slider-container { 
+            --position: 50%; /* JS will update this variable */
+            position: relative; 
+            width: 100%; 
+            max-width: 800px; 
+            aspect-ratio: 16/9; 
+            overflow: hidden; 
+            border-radius: 8px; 
+            margin: 2rem 0; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background-color: #000;
+        }
         
-        /* Accessibility: Invisible range slider for keyboard control */
-        .slider-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; z-index: 10; }
-        .slider-input:focus { outline: 3px solid #005fcc; opacity: 0.2; } /* Visible focus */
+        /* Both images fill the container perfectly */
+        .img-background, .img-foreground { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        
+        /* The CSS Trick: Flattens the top image to simulate unedited N-Log footage! */
+        .n-log-simulation {
+            filter: saturate(30%) contrast(75%) brightness(110%);
+        }
+        
+        /* Clip-path hides the right side of the image without squishing it */
+        .img-foreground { 
+            clip-path: polygon(0 0, var(--position) 0, var(--position) 100%, 0 100%); 
+        }
+        
+        /* White divider line and drag handle */
+        .slider-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: var(--position);
+            width: 3px;
+            background: white;
+            transform: translateX(-50%);
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        /* Accessibility: Invisible range slider for keyboard and touch control */
+        .slider-input { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            opacity: 0; 
+            cursor: ew-resize; 
+            z-index: 10; 
+            margin: 0;
+        }
+        .slider-input:focus { 
+            outline: 3px solid #005fcc; 
+            opacity: 0.2; 
+        } 
+        
+        .badge {
+            display: inline-block;
+            background: #111;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="fade-in">
 
     <h1>Elevating Visuals: The Picswanday Grading Workflow</h1>
-    <p>Professional video production requires shooting in flat color profiles, such as Nikon N-Log, to preserve maximum dynamic range. The true aesthetic is built during the post-production color grading process.</p>
+    <p>Professional commercial production requires shooting in flat color profiles to preserve maximum dynamic range. The true aesthetic and brand identity are built entirely during the post-production color grading process.</p>
 
-    <!-- Audio/Video Component -->
-    <h2>Final Deliverable</h2>
+    <!-- Audio/Video Component (Using reliable public URL) -->
+    <h2>1. Final Video Deliverable</h2>
+    <span class="badge">H.264 Optimized MP4</span>
     <video controls preload="metadata" aria-label="Showcase of final color-graded event footage">
-        <!-- Add your optimized video file here -->
-        <source src="picswanday-showcase.mp4" type="video/mp4">
-        <track kind="captions" src="captions.vtt" srclang="en" label="English">
+        <!-- Secure, high-speed public test video -->
+        <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <!-- Meaningful Interactive Component -->
-    <h2>Compare: Raw N-Log vs. Final Grade</h2>
-    <p>Use the slider below to drag and compare the unedited raw footage with the final cinematic grade.</p>
+    <!-- Meaningful Interactive Component (Using Unsplash CDN with CSS filters) -->
+    <h2>2. Interactive Comparison: Raw N-Log vs. Cinematic Grade</h2>
+    <p>Use the interactive slider below to drag and compare the unedited, flat raw camera footage (left) with the final cinematic grade (right).</p>
     
-    <div class="slider-container">
+    <div class="slider-container" id="slider-container">
+        
         <!-- Final Graded Image (Background) -->
-        <img src="graded-frame.jpg" alt="Final color graded frame showing vibrant colors and contrast" class="img-background">
+        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1200&auto=format&fit=crop" 
+             alt="Final color graded frame showing vibrant colors and high contrast" 
+             class="img-background">
         
-        <!-- Raw N-Log Image (Foreground) -->
-        <img src="raw-nlog-frame.jpg" alt="Raw unedited Nikon N-Log frame showing flat colors" class="img-foreground" id="foreground-img">
+        <!-- Raw N-Log Image (Foreground with CSS flattening filter) -->
+        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1200&auto=format&fit=crop" 
+             alt="Raw unedited frame simulating flat N-log color profile" 
+             class="img-foreground n-log-simulation">
         
+        <!-- White divider line -->
+        <div class="slider-line"></div>
+
         <!-- Keyboard accessible control -->
-        <input type="range" min="0" max="100" value="50" class="slider-input" id="slider" aria-label="Percentage of raw image to display">
+        <input type="range" min="0" max="100" value="50" class="slider-input" id="slider" aria-label="Adjust slider to compare raw versus graded images">
     </div>
 
     <script>
+        const sliderContainer = document.getElementById('slider-container');
         const slider = document.getElementById('slider');
-        const foreground = document.getElementById('foreground-img');
         
+        // Listen for slider movement (works for mouse, touch, and keyboard arrows!)
         slider.addEventListener('input', (e) => {
-            foreground.style.width = `${e.target.value}%`;
+            // Dynamically updates the CSS variable, moving the crop and line perfectly together
+            sliderContainer.style.setProperty('--position', `${e.target.value}%`);
         });
     </script>
 </body>
